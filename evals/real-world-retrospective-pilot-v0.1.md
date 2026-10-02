@@ -786,9 +786,55 @@ globally low-leverage Gap closure.
 
 ---
 
+## R024 — Functionally correct self-hosted CI silently amplified paid network use and trust exposure
+
+**Date:** 2026-10-02
+
+**Real task context**
+
+A private game repository used three persistent Windows self-hosted GitHub Actions
+runners. The CI workflow ran on pull requests and pushes. Node itself was already
+present in the local tool cache, yet `actions/setup-node` restored a remote npm
+cache on each applicable run through a paid VPN / proxy path.
+
+**Observed failure**
+
+The workflow was technically healthy enough to execute and pass tests, but its
+economics were wrong for the actual topology. A real run showed a remote cache
+restore of 41,022,806 bytes (about 39 MiB), while `npm ci` was already fast and
+the persistent runner retained local npm state. With high CI volume, the small
+per-run transfer multiplied into multi-gigabyte paid traffic.
+
+The same review exposed a related trust-amplification risk: the self-hosted job
+accepted `pull_request` work without an explicit same-repository / trusted-trigger
+gate before candidate code reached a persistent personal machine. The problem was
+therefore broader than one cache flag: automation amplified both resource cost and
+privileged execution exposure.
+
+**Expected Protocol behavior**
+
+- Treat repeated automation as an amplification surface, not only a functional workflow.
+- Identify who or what can trigger the expensive / privileged path.
+- Measure representative per-run external resource use instead of assuming a cache hit is beneficial.
+- Stress frequency, concurrency, retries, duplicates, stale work, and adversarial repetition.
+- Check whether persistent local state makes repeated remote synchronization counterproductive.
+- Keep untrusted candidate code away from persistent privileged runners unless the trust/isolation boundary is sufficient.
+- Require proportionate observability and a bounded failure mode before calling the automation operationally safe.
+- Preserve the specific fix as a local Closure, but harden the broader failure class rather than stopping at the one-line cache change.
+
+**Current v2.16.0 coverage:** **PASS**
+
+v2.15.0 already modeled cost, total ownership burden, stress thinking, and workflow
+hardening separately, but did not make their interaction at an automated execution
+boundary explicit enough. v2.16.0 adds Automated Execution Exposure so a locally
+correct action cannot silently inherit an unbounded frequency / concurrency /
+trigger / persistence envelope.
+
+---
+
 # Pilot finding
 
-This real-world retrospective set contains twenty-three distinct historical failure patterns.
+This real-world retrospective set contains twenty-four distinct historical failure patterns.
 
 - Fourteen were already represented through v2.11.1.
 - Five cases (R015–R019) produced v2.12.0's Verified Closure, managed-variability, baseline-materialization, and closure-capitalization rules.
@@ -796,7 +842,8 @@ This real-world retrospective set contains twenty-three distinct historical fail
 - R021 exposed the difference between a legible rule and an enforceable mechanism and produced v2.13.0's Enforcement Graduation / Operational Closure rules.
 - R022 exposed a Why-before-How failure: locally correct reuse and optimization proceeded before the necessity of the work itself was challenged.
 - R023 exposed a deeper frame / ownership failure: even with valid purpose and reuse-first local sourcing, the current decomposition could still compile unnecessary ownership into Work Items and keep local Dominant-Gap routing trapped inside the wrong frame.
-- All twenty-three are now represented by current rules.
+- R024 exposed automated resource/trust amplification: a correct per-run action became unsafe when multiplied by high-frequency self-hosted CI and paid network transport.
+- All twenty-four are now represented by current rules.
 
 This is evidence that the Protocol is being revised against failures that actually occurred in practice, and that the current rules have meaningful **coverage** of this retrospective set.
 
