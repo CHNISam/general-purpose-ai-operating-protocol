@@ -2,6 +2,23 @@
 
 This file records public semantic and engineering changes. Canonical methodology remains in `PROTOCOL.md`.
 
+## v2.16.0 — 2026-10-02
+
+### Protocol
+
+- Added **Automated Execution Exposure** for repeated, scheduled, concurrent, retryable, fan-out, user/external-triggerable automation.
+- Added the minimum exposure model: trigger surface, unit side effect, amplification factors, persistence/privilege, and containment.
+- Added a stress check for otherwise-correct work executing 100x/1000x more often than expected or being repeatedly triggered by an actor who should not control the expensive/privileged path.
+- Clarified that conventional optimizations such as remote caches must be validated in the actual execution topology; persistent local workers can invert the expected benefit.
+- Clarified that functional correctness / green CI is insufficient when the real operating envelope violates cost, quota, availability, trust, privacy, or security constraints.
+
+### Runtime / evidence
+
+- Updated the compact router, workflow-hardening and validation skills, runtime map, Protocol index, README, and retrospective evidence.
+- Added R024, the Nameless Reach self-hosted CI incident where a ~39 MiB remote npm cache restore multiplied across high CI volume and paid VPN transport, while the same automation also lacked a sufficiently explicit untrusted-trigger boundary for a persistent runner.
+- Preserved v2.15.0 under `docs/history/`.
+- No new deterministic Protocol enforcement rule was added; exposure thresholds and trust envelopes remain project/runtime-specific, while concrete projects should mechanize their own bounds where decidable.
+
 ## v2.15.0 — 2026-09-25
 
 ### Protocol

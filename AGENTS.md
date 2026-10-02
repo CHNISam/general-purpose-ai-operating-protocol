@@ -121,6 +121,7 @@ The downstream agent should not need to interpret this whole Protocol again.
 - When a mature baseline materially constrains execution, keep Fixed Core / Allowed Variation / Project Delta distinct.
 - When losing a consequential solved decision is likely to recur, preserve it in a discoverable and preferably enforceable project mechanism rather than relying on prompt prose or operator memory alone.
 - **Legible is not enforced:** for recurring/consequential closure, ask whether a violating state can still silently pass. If mechanically decidable, graduate to the cheapest reliable guard and prove bad-case rejection plus allowed-case acceptance; otherwise define the Human/Product gate. Documentation alone is not Operational Closure.
+- **Bound automation amplification:** when work can repeat, fan out, retry, run concurrently, or be externally triggered, inspect who can trigger it, per-run metered/scarce-resource or privileged side effects, duplication/stale-work amplification, and persistence. If amplified exposure can materially affect cost, quota, availability, security, or the Outcome, require proportionate observability plus a bounded failure mode before treating the automation as operationally safe.
 - Do not manufacture alternatives when one action is clearly implied.
 - Define proof before consequential action.
 - Action completion is not outcome validation.

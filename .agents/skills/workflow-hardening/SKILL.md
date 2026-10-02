@@ -69,6 +69,41 @@ Escalate only as far as the evidence justifies:
 
 When a useful closure is likely to recur, preserve its claim, scope, baseline, validity conditions, allowed variation, proof, and invalidation triggers in the lightest discoverable / enforceable mechanism that fits the risk.
 
+## Automation amplification and containment
+
+For repeated, scalable, scheduled, concurrent, retryable, fan-out, or externally
+triggerable execution, inspect more than functional correctness.
+
+Model the minimum useful exposure:
+
+- **trigger surface** — who or what can enqueue the work;
+- **unit side effect** — metered/scarce resource use, cash/quota use, external calls, writes, or privileged execution per run;
+- **amplifiers** — frequency, concurrency, retries, fan-out, duplicates, stale work, and adversarial repetition;
+- **persistence / privilege** — whether candidate or untrusted code can affect a reusable runner, credentialed environment, cache, or other durable state;
+- **containment** — what bounds, cancels, isolates, rate-limits, budgets, or stops the exposure.
+
+Stress the mechanism with the question:
+
+> What happens if this valid-looking action executes 100x or 1000x more often than expected?
+
+When the result can materially affect budget, runway, quota, availability,
+security, privacy, or the parent Outcome, harden before scaling. Prefer the
+cheapest reliable mechanism that closes the real path: trusted-trigger gates,
+isolation / ephemeral execution, deduplication, cancel-superseded behavior,
+concurrency / rate limits, timeouts, safe local reuse, quotas / budgets, stop
+conditions, and resource telemetry.
+
+Do not assume a cache or other conventional optimization is beneficial outside
+the topology it was designed for. On persistent workers, verify whether local
+state already provides the capability before adding repeated remote transfer.
+
+For privileged self-hosted execution, treat untrusted candidate code as a trust
+boundary, not merely another test input. A persistent runner that can execute
+untrusted code can turn one accepted job into durable compromise.
+
+Where mechanically testable, include a negative control for the amplified failure
+class, not just a happy-path run.
+
 ## Enforcement graduation
 
 For recurring or consequential closure, separate **Epistemic Closure** from

@@ -59,6 +59,27 @@ Do not confuse:
 - Action completed → Outcome proven
 - Library installed → Capability validated
 - Tool returned success → Real state is correct
+- Tests green → repeated automation is operationally safe
+
+### Operational acceptability for repeated automation
+
+Functional correctness is insufficient when the real operating envelope includes
+metered / scarce resources, external side effects, privileged infrastructure, or
+trigger amplification.
+
+When material, validation should observe the real execution topology and enough
+of its operating envelope to answer:
+
+- what resource / cash / quota is consumed per representative run;
+- whether warm versus cold/locality conditions materially change that cost;
+- who can trigger the expensive or privileged path;
+- whether concurrency, retries, duplicates, stale work, or fan-out amplify it;
+- whether one run can persistently modify a reusable privileged environment;
+- whether containment actually bounds the failure.
+
+A successful command, cache hit, CI PASS, or single nominal run is not a
+VALIDATION PASS for continuous operation if the same mechanism can silently
+exceed the intended cost, quota, trust, or availability envelope.
 
 ## Post-action update
 
@@ -98,6 +119,7 @@ Before completion determine:
 - Was the intended outcome validated where necessary?
 - What materially relevant uncertainty remains?
 - Did new evidence invalidate a prior assumption?
+- For repeated / triggerable automation with material exposure, did observed operation stay inside the intended resource / cost / trust envelope?
 
 If meaningful uncertainty was resolved and is likely to recur, decide whether the
 result should be capitalized into a discoverable or enforceable closure mechanism.
