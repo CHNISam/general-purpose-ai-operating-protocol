@@ -43,7 +43,7 @@ This failure is recorded as [R001](evals/real-world-retrospective-pilot-v0.1.md)
 
 | Evidence layer | Current public state |
 |---|---|
-| Real historical failure patterns | **23** sanitized retrospective cases |
+| Real historical failure patterns | **24** sanitized retrospective cases |
 | Deterministic conformance | **14/14** public fixtures passing |
 | Mechanical policy | JSON Schema + OPA/Rego |
 | Portable enforcement | CI-built OPA WebAssembly bundle |
@@ -91,14 +91,19 @@ It is **not**:
 
 The repository now also includes a **reference executable enforcement layer** for the subset of Protocol invariants that can be checked deterministically. That layer complements model judgment; it does not replace it.
 
-v2.15.0 strengthens **problem-frame and ownership-boundary revalidation**.
+v2.16.0 adds **Automated Execution Exposure**. Repeated, concurrent,
+retryable, fan-out, or externally triggerable automation must be evaluated for
+its real trigger surface, per-run side effects, amplification factors,
+persistence/privilege, and containment when those dimensions can materially
+affect cost, quota, availability, security, or the parent Outcome. Functional
+correctness alone no longer implies that repeated automation is operationally
+acceptable.
+
+v2.15.0 strengthened **problem-frame and ownership-boundary revalidation**.
 A valid purpose is no longer enough to justify the current decomposition: before
 material project-owned work, and when repeated local closures fail to move the
 parent Outcome proportionally, the runtime challenges whether the project is
-solving at the right level. It introduces the Ownership Frontier, a
-Ceiling-Baseline Counterfactual for breaking decomposition fixation, sourcing
-altitude from parent capability downward, and strategic supersession of local
-Closure when a stronger baseline makes continued ownership unnecessary.
+solving at the right level.
 
 The Protocol supports model judgment. It does not replace judgment.
 
@@ -119,7 +124,7 @@ Codex can discover repository `AGENTS.md` instructions and repository-local skil
 
 ### Humans
 
-- [PROTOCOL.md](PROTOCOL.md) — canonical **Model-First Adaptive Protocol v2.15.0**.
+- [PROTOCOL.md](PROTOCOL.md) — canonical **Model-First Adaptive Protocol v2.16.0**.
 - [AGENTS.md](AGENTS.md) — compact router and always-on guards.
 - [`.agents/skills/`](.agents/skills/) — conditional methods and task modes.
 - [docs/architecture.md](docs/architecture.md) — repository architecture and maintenance policy.
