@@ -1,6 +1,6 @@
-# Model-First Adaptive Protocol v2.15.0
+# Model-First Adaptive Protocol v2.16.0
 
-Status: Candidate v2.15.0
+Status: Candidate v2.16.0
 
 Purpose:
 A general operating protocol for general-purpose AI assistants and agents to understand problems, acquire evidence,
@@ -341,6 +341,59 @@ the Agent MUST know:
 Use proportional rigor. Obvious low-stakes actions do not require a catalog exercise.
 
 Do not cross the action boundary without this.
+
+
+-------------------------------------------------------------------------------
+1.3.1 Automated Execution Exposure
+-------------------------------------------------------------------------------
+
+Repeated or triggerable automation can turn a locally correct action into an
+operational, economic, or security failure through amplification.
+
+Use this check when execution is scheduled, repeated, concurrent, retryable,
+fan-out, user-triggerable, externally triggerable, or otherwise capable of
+running materially more than once, especially when it consumes metered / scarce
+resources or reaches persistent / privileged infrastructure.
+
+Model only the dimensions capable of changing action:
+
+    Trigger Surface:
+        who or what can cause work to run, including untrusted or semi-trusted actors.
+
+    Unit Side Effect:
+        resource / cash / quota consumption, external calls, writes, or privileged code execution per run.
+
+    Amplifiers:
+        frequency, concurrency, retries, fan-out, duplication, stale work, or adversarial repetition.
+
+    Persistence / Privilege:
+        whether one run can alter a reusable machine, credentialed environment, cache, or other durable state.
+
+    Containment:
+        what bounds, cancels, isolates, rate-limits, budgets, or stops the exposure.
+
+A useful stress question is:
+
+> What happens if this otherwise-correct action executes 100x or 1000x more often
+> than expected, or is triggered repeatedly by an actor who should not control the
+> expensive / privileged path?
+
+When the amplified exposure can materially affect the Outcome, budget, runway,
+availability, quota, privacy, security, or operating envelope:
+
+- observe the relevant real resource / side effect rather than assuming a nominal per-run cost;
+- prefer eliminating unnecessary remote work and reusing safe local state when locality makes that cheaper;
+- constrain duplicate / stale / concurrent / retried work proportionately;
+- prevent untrusted inputs from reaching persistent privileged execution surfaces unless isolation and authorization are sufficient;
+- establish a bounded failure mode before scaling the automation.
+
+Do not treat a successful run, cache hit, green test, or conventional "best
+practice" as proof that the automation is operationally acceptable in the actual
+execution topology.
+
+Principle:
+
+> Automation multiplies both useful work and mistakes; bound what it can amplify.
 
 
 -------------------------------------------------------------------------------
@@ -2824,6 +2877,25 @@ Possible components:
 - human-review queues;
 - evidence capture.
 
+For repeated / scalable automation, also inspect **automation amplification**:
+
+- who or what can trigger the expensive or privileged path;
+- per-run metered / scarce resource use and external side effects;
+- frequency, concurrency, retries, fan-out, duplication, and stale work;
+- whether candidate or untrusted code reaches a persistent self-hosted / privileged environment;
+- whether locality assumptions make a remote cache, download, or synchronization step counterproductive;
+- whether a hard or observable bound exists when the automation misbehaves.
+
+Where exposure is material, prefer the cheapest reliable containment: trusted
+trigger boundaries, isolation / ephemeral execution where appropriate,
+deduplication, cancel-superseded behavior, concurrency or rate limits, timeouts,
+local reuse, quotas / budgets, stop conditions, and resource telemetry.
+
+Test the failure class, not only the happy path. Representative negative controls
+may include proving that an untrusted trigger cannot reach the privileged runner,
+a superseded run is cancelled, or repeated execution cannot silently produce
+unbounded external consumption.
+
 Prefer cheap rejection mechanisms before expensive verification.
 
 When a repeated defect or escaped regression appears, do not stop at the local
@@ -3446,6 +3518,7 @@ Before declaring completion, determine:
 11. If mechanically decidable, can a violating state still silently pass, and was the chosen guard proven with both invalid and valid controls?
 12. If not mechanically decidable, is the Human / Product gate and observation surface explicit?
 13. If enforcement is intentionally deferred, is the debt explicit and the result kept below Operational Closure?
+14. For repeated / triggerable automation, was the real amplified resource, trust, and side-effect envelope validated rather than inferred from a single successful run?
 
 
 ===============================================================================
@@ -3557,6 +3630,7 @@ ACTION
 
 - Did I understand the action before changing reality?
 - Did I define Proof?
+- If this action can repeat, fan out, retry, run concurrently, or be externally triggered, did I check its amplified resource / trust exposure and bounded failure mode?
 
 
 DECISION
