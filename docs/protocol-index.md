@@ -7,7 +7,7 @@ The section numbers below are stable semantic landmarks. Search the exact headin
 | Section | Use when |
 |---|---|
 | 0. PRIMARY OBJECTIVE | orienting the whole task and preventing task/feature/solution collapse |
-| 1. RUNTIME KERNEL — NON-NEGOTIABLE | checking the core operating loop, Runtime Context/freshness/operator visibility, action boundary, automated execution exposure/amplification, Verified Closure / managed variability, recursive sourcing / no meta-layer exemption, capability-surface awareness, executor-bias guard, capability/implementation distinction, and evidence honesty |
+| 1. RUNTIME KERNEL — NON-NEGOTIABLE | checking the core operating loop, Runtime Context/freshness/operator visibility, action boundary, automated execution exposure/amplification, system composition/convergence/backpressure, Verified Closure / managed variability, recursive sourcing / no meta-layer exemption, capability-surface awareness, executor-bias guard, capability/implementation distinction, and evidence honesty |
 | 2. DOMINANT GAP ROUTING | deciding whether the blocker is Model / Evidence / Decision / Planning / Capability / Reality / Verification-Validation |
 | 3. PURPOSE | clarifying the intended real-world state, challenging whether proposed work is necessary, and revalidating problem frame / Ownership Frontier before material owned work |
 | 4. MINIMUM SUFFICIENT MODELING | choosing the right model/schema for the intended use |
@@ -75,6 +75,9 @@ Read: **12**, then apply **8** before building new hardening infrastructure.
 
 ### “The automation works, but repeated execution may burn money/resources or expose a persistent runner”
 Read: **1.3.1 → 12 → 11 → 19**. Model the trigger surface, unit side effect, amplification factors, persistence/privilege, and containment; observe the real operating envelope and bound the failure before scaling.
+
+### “Each unit of work is correct, but parallel work is piling up faster than the system can integrate / validate / decide it”
+Read: **1.3.2 → 10 → 12 → 19**. Identify the shared convergence point, sustainable capacity, in-flight work / age, divergence cost, and backpressure. Do not equate task independence with safe concurrency or local completion with completed throughput.
 
 ## Runtime-first rule
 
