@@ -832,9 +832,78 @@ trigger / persistence envelope.
 
 ---
 
+## R025 — Individually correct parallel work accumulated faster than the shared integration path could converge it
+
+**Date:** 2026-10-04
+
+**Real task context**
+
+A software project used many coding-agent sessions in parallel. The local workflow
+was already comparatively strict: one task had one owner and Change branch /
+worktree, proposals required CI and guarded integration, and important controls
+failed closed.
+
+Many relatively large tasks were nevertheless allowed to remain in flight at the
+same time while the shared target branch continued to evolve.
+
+**Observed failure**
+
+No single development task needed to be obviously wrong for the system to degrade.
+Development fan-out outpaced the one shared integration path. Ready / nearly-ready
+branches aged against a moving baseline, which increased merge conflicts,
+projection churn, proof invalidation, repeated CI, mechanical repair, and the
+cost of every later integration.
+
+The result was a positive feedback loop:
+
+```text
+more in-flight work
+→ older divergent branches
+→ more reconciliation / proof cost
+→ lower integration throughput
+→ still more in-flight work
+```
+
+Local task completion therefore overstated real project throughput. The missing
+control was not another per-task correctness rule; it was system-level convergence
+capacity and backpressure.
+
+**User correction**
+
+Stop adding new development work, inventory the open proposals, preserve dirty
+state, consume already-proven / merge-ready work first, separate repair blockers
+from the main integration lane, and re-establish continuous integration before
+resuming broad fan-out.
+
+**Expected Protocol behavior**
+
+- Do not infer system correctness from the correctness of individual actors.
+- Distinguish work that is structurally parallelizable from work that is safely
+  admissible concurrently.
+- Identify the shared convergence point and any serialized bottleneck before
+  scaling fan-out.
+- Model sustainable convergence capacity, in-flight WIP / age, and divergence cost.
+- Propagate backpressure upstream when production materially outruns convergence;
+  drain inventory instead of continuing to manufacture it.
+- Prefer smaller / shorter-lived increments when divergence cost rises with age.
+- Treat unconverged local completion as inventory, not completed throughput.
+- Keep project-specific WIP thresholds and enforcement proportional to observed
+  capacity rather than inventing a universal number.
+
+**Current v2.17.0 coverage:** **PASS**
+
+v2.16.0 covered execution amplification through frequency, concurrency, retries,
+fan-out, stale work, resources, and trust exposure, but it did not make the
+shared convergence surface or backpressure requirement explicit enough when
+every local unit was individually valid. v2.17.0 adds System Composition,
+Convergence, and Backpressure and compiles it into Planning, Workflow Hardening,
+Completion, and the compact runtime.
+
+---
+
 # Pilot finding
 
-This real-world retrospective set contains twenty-four distinct historical failure patterns.
+This real-world retrospective set contains twenty-five distinct historical failure patterns.
 
 - Fourteen were already represented through v2.11.1.
 - Five cases (R015–R019) produced v2.12.0's Verified Closure, managed-variability, baseline-materialization, and closure-capitalization rules.
@@ -843,7 +912,8 @@ This real-world retrospective set contains twenty-four distinct historical failu
 - R022 exposed a Why-before-How failure: locally correct reuse and optimization proceeded before the necessity of the work itself was challenged.
 - R023 exposed a deeper frame / ownership failure: even with valid purpose and reuse-first local sourcing, the current decomposition could still compile unnecessary ownership into Work Items and keep local Dominant-Gap routing trapped inside the wrong frame.
 - R024 exposed automated resource/trust amplification: a correct per-run action became unsafe when multiplied by high-frequency self-hosted CI and paid network transport.
-- All twenty-four are now represented by current rules.
+- R025 exposed a system-composition failure: individually valid parallel work accumulated faster than a shared convergence path could absorb it, so local correctness and task completion failed to imply safe concurrency or real throughput.
+- All twenty-five are now represented by current rules.
 
 This is evidence that the Protocol is being revised against failures that actually occurred in practice, and that the current rules have meaningful **coverage** of this retrospective set.
 
