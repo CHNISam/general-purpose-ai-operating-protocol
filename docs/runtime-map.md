@@ -28,6 +28,7 @@ It is a **maintenance map**, not proof of semantic completeness and not an autom
 | Closure preservation / capitalization mechanisms | `workflow-hardening` + `validation` |
 | Enforcement Graduation / Operational Closure | `PROTOCOL.md` 1.4.3 + `workflow-hardening` + `validation` + executable policy where deterministically representable |
 | Automated execution exposure / amplification bounds | `PROTOCOL.md` 1.3.1 + `AGENTS.md` always-on guard + `workflow-hardening` + `validation` |
+| System composition / convergence / backpressure | `PROTOCOL.md` 1.3.2 + `AGENTS.md` always-on guard + `planning` + `workflow-hardening` |
 | Planning | `planning` |
 | Reality Gap / execution | direct action through the host AI/runtime |
 | Verification / Validation Gap + proof | `validation` |

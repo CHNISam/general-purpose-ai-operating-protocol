@@ -2,6 +2,23 @@
 
 This file records public semantic and engineering changes. Canonical methodology remains in `PROTOCOL.md`.
 
+## v2.17.0 — 2026-10-04
+
+### Protocol
+
+- Added **System Composition, Convergence, and Backpressure**: locally correct actions are no longer assumed to compose into globally safe behavior when they share evolving state or a constrained convergence surface.
+- Distinguished **parallelizable** work from **concurrently admissible** work; the absence of direct task dependencies no longer justifies unbounded fan-out.
+- Added the minimum convergence model: local correctness, convergence point, convergence capacity, in-flight work / age, divergence cost, and backpressure.
+- Clarified that unconverged work is inventory rather than completed throughput, and that upstream admission should throttle / drain when downstream convergence is saturated.
+- Strengthened Planning, Completion, the Silent Compliance Audit, anti-patterns, and the runtime cheatsheet so system flow is evaluated in addition to per-task correctness.
+
+### Runtime / evidence
+
+- Updated the compact router, planning and workflow-hardening skills, runtime map, Protocol index, README, and retrospective evidence.
+- Added R025, the multi-agent integration-debt incident where individually valid tasks and branches accumulated faster than a shared integration path could absorb them, producing branch aging, conflict / proof churn, repeated CI, and falling global throughput.
+- Preserved v2.16.0 under `docs/history/`.
+- No new deterministic Protocol enforcement rule was added; WIP limits, age thresholds, convergence capacity, and admission controls are project/runtime-specific, while concrete systems should mechanize measurable bounds where recurrence and cost justify it.
+
 ## v2.16.0 — 2026-10-02
 
 ### Protocol
