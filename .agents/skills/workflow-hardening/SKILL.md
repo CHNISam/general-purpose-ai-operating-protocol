@@ -104,6 +104,30 @@ untrusted code can turn one accepted job into durable compromise.
 Where mechanically testable, include a negative control for the amplified failure
 class, not just a happy-path run.
 
+## System composition, convergence, and backpressure
+
+When individually correct work fans out but later must converge through shared
+evolving state or a scarce review / validation / integration / decision surface,
+model flow as a system rather than treating each unit in isolation.
+
+Inspect:
+
+- the shared convergence point and any serialized bottleneck;
+- sustainable convergence capacity rather than only theoretical parallelizability;
+- in-flight work and age;
+- how divergence cost grows through staleness, conflicts, proof invalidation,
+  coordination, or rework;
+- what propagates backpressure upstream when the convergence point saturates;
+- whether blocked items can be quarantined / skipped safely instead of monopolizing
+  the whole path;
+- whether the measured throughput is authoritative convergence or merely local
+  task completion.
+
+Prefer project-specific observed bounds over universal WIP numbers. If recurrence
+is consequential and a limit or admission condition is mechanically decidable,
+graduate it into the cheapest reliable enforcement; otherwise expose the state
+and define the human / workflow gate explicitly.
+
 ## Enforcement graduation
 
 For recurring or consequential closure, separate **Epistemic Closure** from
