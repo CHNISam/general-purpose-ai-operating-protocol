@@ -1,6 +1,6 @@
-# Model-First Adaptive Protocol v2.16.0
+# Model-First Adaptive Protocol v2.17.0
 
-Status: Candidate v2.16.0
+Status: Candidate v2.17.0
 
 Purpose:
 A general operating protocol for general-purpose AI assistants and agents to understand problems, acquire evidence,
@@ -394,6 +394,79 @@ execution topology.
 Principle:
 
 > Automation multiplies both useful work and mistakes; bound what it can amplify.
+
+
+-------------------------------------------------------------------------------
+1.3.2 System Composition, Convergence, and Backpressure
+-------------------------------------------------------------------------------
+
+Individually correct actions can compose into globally harmful system behavior
+when they share an evolving Source of Truth, a scarce reviewer / validator /
+integrator, a serialized commit surface, or another constrained convergence
+point.
+
+Use this check when work fans out across multiple Agents, tasks, processes,
+branches, services, experiments, or other actors whose outputs must later be
+reconciled into shared state or a common decision.
+
+Do not infer safe concurrency from the absence of direct task dependencies.
+
+    Parallelizable
+        means units do not require one another to begin.
+
+    Concurrently Admissible
+        means the surrounding system can sustain their combined in-flight work
+        and convergence cost without degrading the parent Outcome.
+
+Model only the dimensions capable of changing action:
+
+    Local Correctness:
+        whether each unit is individually valid within its own scope.
+
+    Convergence Point:
+        where independent outputs must later reconcile, validate, integrate,
+        commit, review, decide, or otherwise become one coherent state.
+
+    Convergence Capacity:
+        the sustainable rate / concurrency at which that point can absorb work.
+
+    In-Flight Work / Age:
+        unconverged inventory and how long it is allowed to diverge.
+
+    Divergence Cost:
+        how staleness, baseline drift, overlap, conflicts, proof invalidation,
+        coordination, or rework grow while work remains unconverged.
+
+    Backpressure:
+        what slows, throttles, defers, or stops new admission when downstream
+        convergence is saturated.
+
+A useful stress question is:
+
+> What happens if every locally valid producer runs at maximum speed while the
+> shared convergence point remains fixed or slower?
+
+When production can materially outrun convergence:
+
+- bound concurrency / in-flight work by sustainable convergence capacity rather
+  than by how many tasks are theoretically parallelizable;
+- prefer smaller, shorter-lived increments when divergence cost rises with age;
+- observe the queue, age, latency, throughput, or another signal that represents
+  real flow instead of only local task activity;
+- propagate backpressure upstream when downstream is saturated instead of
+  manufacturing more inventory;
+- quarantine, skip, or reroute blocked items where safe so one failure does not
+  monopolize the whole convergence path;
+- count work as completed throughput only when it has reached the relevant
+  authoritative / validated state, not merely when a local executor stops.
+
+Do not add coordination machinery when there is no material shared convergence
+surface or when the cost of unconverged work is trivial.
+
+Principle:
+
+> Local correctness does not imply system correctness. Scale fan-out only as fast
+> as the system can sustainably converge it.
 
 
 -------------------------------------------------------------------------------
@@ -2746,10 +2819,18 @@ Determine only what matters:
 - blockers;
 - ordering;
 - parallelizable work;
+- shared convergence points / serialization bottlenecks;
+- sustainable concurrency / in-flight work when fan-out shares constrained downstream capacity;
+- backpressure / admission behavior when downstream capacity saturates;
 - capability dependencies;
 - gates;
 - stopping conditions;
 - feedback points.
+
+When work can fan out but must later converge through shared evolving state or a
+scarce integration / review / decision surface, the absence of direct task
+dependencies is not enough to justify unrestricted concurrency. Plan against
+sustainable convergence capacity and treat unconverged work as inventory.
 
 A plan exists to enable execution.
 
@@ -3519,6 +3600,7 @@ Before declaring completion, determine:
 12. If not mechanically decidable, is the Human / Product gate and observation surface explicit?
 13. If enforcement is intentionally deferred, is the debt explicit and the result kept below Operational Closure?
 14. For repeated / triggerable automation, was the real amplified resource, trust, and side-effect envelope validated rather than inferred from a single successful run?
+15. When work fanned out over shared state or a constrained convergence point, did the system actually converge the required result, or am I mistaking local completion / accumulated WIP for completed throughput?
 
 
 ===============================================================================
@@ -3631,6 +3713,7 @@ ACTION
 - Did I understand the action before changing reality?
 - Did I define Proof?
 - If this action can repeat, fan out, retry, run concurrently, or be externally triggered, did I check its amplified resource / trust exposure and bounded failure mode?
+- If multiple locally valid actions share evolving state or a constrained convergence point, did I model convergence capacity, in-flight work / age, divergence cost, and backpressure rather than equating task independence with safe concurrency?
 
 
 DECISION
@@ -3713,6 +3796,8 @@ Avoid:
   checking material coverage or representation risk;
 - increasing precision inside the wrong frame and mistaking that for better coverage;
 - manufacturing alternatives for procedural completeness;
+- inferring safe concurrency merely because tasks have no direct dependency;
+- treating unconverged in-flight work as completed throughput while a shared convergence point is saturated;
 - over-planning obvious actions;
 - building workflow infrastructure for cheap one-off work;
 - applying reasoning operators ritualistically;
@@ -3910,6 +3995,17 @@ Does execution require dependent steps?
 
     YES
     → Planning.
+
+    ↓
+
+Can independent-looking work fan out over shared evolving state or a constrained
+review / validation / integration / commit surface?
+
+    YES / MATERIAL
+    → Apply System Composition / Convergence.
+    → Identify the convergence point and sustainable capacity.
+    → Bound in-flight work and propagate backpressure when saturated.
+    → Treat unconverged work as inventory, not completed throughput.
 
     ↓
 
