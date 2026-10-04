@@ -1,6 +1,6 @@
 ---
 name: planning
-description: Plan execution when the direction is already chosen but multiple dependent actions, ordering constraints, coordination, gates, or feedback points must be resolved. Do not use planning to hide an unresolved Model, Evidence, Decision, or Capability Gap, and do not produce planning artifacts when one obvious action exists.
+description: Plan execution when the direction is already chosen but multiple dependent actions, ordering constraints, shared convergence points, capacity/backpressure constraints, gates, or feedback points must be resolved. Do not use planning to hide an unresolved Model, Evidence, Decision, or Capability Gap, and do not produce planning artifacts when one obvious action exists.
 ---
 
 # Planning
@@ -15,6 +15,9 @@ Determine only what materially enables execution:
 - blockers;
 - ordering;
 - parallelizable work;
+- shared convergence points / serialization bottlenecks;
+- sustainable concurrency / in-flight work when fan-out shares constrained downstream capacity;
+- backpressure / admission behavior when downstream capacity saturates;
 - capability dependencies;
 - gates;
 - stopping conditions;
@@ -31,6 +34,7 @@ A plan is not evidence.
 - Do not use planning to hide missing evidence.
 - Make destructive, irreversible, production, migration, release, expensive, or high-risk gates explicit.
 - Prefer the smallest executable plan that preserves important dependencies and feedback.
+- Do not infer safe concurrency merely because tasks have no direct dependency. When outputs must later reconcile through shared evolving state or a scarce reviewer / validator / integrator, plan against sustainable convergence capacity and treat unconverged work as inventory.
 
 ## Exit
 
